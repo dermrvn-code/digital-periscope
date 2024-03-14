@@ -9,7 +9,7 @@ public class InteractableOutline : Interactable
     public override void Setup()
     {
         outline = gameObject.AddComponent<Outline>();
-        outline.OutlineMode = Outline.Mode.OutlineAll;
+        outline.OutlineMode = Outline.Mode.OutlineVisible;
         outline.OutlineColor = Color.black;
         outline.OutlineWidth = 5f;
         outline.enabled = false;
