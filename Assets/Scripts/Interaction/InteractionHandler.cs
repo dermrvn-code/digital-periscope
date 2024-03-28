@@ -8,8 +8,39 @@ public class InteractionHandler : MonoBehaviour
 
     RaycastHit hit;
     Interactable target;
+    EyesHandler eyesHandler;
+
+    public Dictionary<DomePosition, Interactable> elements = new Dictionary<DomePosition, Interactable>();
 
     public LayerMask layer;
+
+    void Start()
+    {
+        eyesHandler = GetComponent<EyesHandler>();
+        UpdateElements();
+    }
+
+    void UpdateElements()
+    {
+        var domeElements = FindObjectsOfType<DomePosition>();
+        foreach (var domeElement in domeElements)
+        {
+            Interactable elementToAdd;
+            if (domeElement.GetComponent<Interactable>() != null)
+            {
+                elementToAdd = domeElement.GetComponent<Interactable>();
+            }
+            else if (domeElement.GetComponentInChildren<Interactable>() != null)
+            {
+                elementToAdd = domeElement.GetComponentInChildren<Interactable>();
+            }
+            else
+            {
+                return;
+            }
+            elements.Add(domeElement, elementToAdd);
+        }
+    }
 
     public void Interact()
     {
@@ -18,34 +49,38 @@ public class InteractionHandler : MonoBehaviour
 
 
     // Update is called once per frame
+    float oldRotation = -20;
+    bool checkedElements = false;
+    int offset = 10;
     void Update()
     {
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layer))
+        if (eyesHandler.rotation != oldRotation)
         {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-
-            hit.collider.gameObject.TryGetComponent<Interactable>(out target);
-            Debug.Log("Hit " + hit.collider.gameObject.name);
-            target?.Highlight();
-
-            // hit.collider.gameObject.TryGetComponent<TMP_Text>(out text);
-            // if (text != null)
-            // {
-            //     text.fontStyle = TMPro.FontStyles.Underline;
-            //     return;
-            // }
-        }
-        else
-        {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
-
+            oldRotation = eyesHandler.rotation;
             target?.Unhighlight();
-            // if (text != null)
-            // {
-            //     text.fontStyle = TMPro.FontStyles.Normal;
-            //     text = null;
-            // }
+            target = null;
+            checkedElements = false;
         }
-
+        else if (!checkedElements)
+        {
+            checkedElements = true;
+            if (elements.Count > 0)
+            {
+                foreach (var element in elements)
+                {
+                    var leftOffset = (oldRotation - offset) % 360;
+                    var rightOffset = (oldRotation + offset) % 360;
+                    if (leftOffset > rightOffset)
+                    {
+                        leftOffset = leftOffset - 360;
+                    }
+                    if (leftOffset < element.Key.x && element.Key.x < (oldRotation + offset) % 360)
+                    {
+                        target = element.Value;
+                    }
+                }
+                target?.Highlight();
+            }
+        }
     }
 }

@@ -19,11 +19,9 @@ public class InteractableOutline : Interactable
     public override void Highlight()
     {
         outline.enabled = true;
-        Debug.Log("Highlight");
     }
     public override void Unhighlight()
     {
         outline.enabled = false;
-        Debug.Log("UnHighlight");
     }
 }

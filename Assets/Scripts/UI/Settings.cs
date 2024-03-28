@@ -10,12 +10,10 @@ public class Settings : MonoBehaviour
     public EyesHandler eyes;
     public Slider eyeSpacing;
     public Slider heightOffset;
-    private Image image;
-    public bool visible = false;
+    private bool visible = false;
 
     void Start()
     {
-        image = GetComponent<Image>();
         ToggleView(!visible);
         if (eyes == null)
         {
@@ -42,7 +40,6 @@ public class Settings : MonoBehaviour
         {
             child.gameObject.SetActive(false);
         }
-        image.enabled = false;
         visible = false;
     }
 
@@ -52,7 +49,6 @@ public class Settings : MonoBehaviour
         {
             child.gameObject.SetActive(true);
         }
-        image.enabled = true;
         visible = true;
     }
 

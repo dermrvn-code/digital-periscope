@@ -47,12 +47,11 @@ public class EyesHandler : MonoBehaviour
 
     void UpdateRotation()
     {
-        this.gameObject.transform.localEulerAngles = new Vector3(0, rotation, 0);
+        gameObject.transform.localEulerAngles = new Vector3(gameObject.transform.localEulerAngles.x, rotation, gameObject.transform.localEulerAngles.z);
     }
-
     void UpdateHeight()
     {
-        this.gameObject.transform.localPosition = new Vector3(0, height + heightOffset, 0);
+        gameObject.transform.localPosition = new Vector3(0, height + heightOffset, 0);
     }
 
 
@@ -66,18 +65,20 @@ public class EyesHandler : MonoBehaviour
 
     public void ZoomOut()
     {
-        if (leftEye.fieldOfView >= 100) return;
+        if (zoom >= 100) return;
         zoom = zoom + 1;
         SetZoom(zoom);
     }
 
     public void LeftMove()
     {
+        if (rotation - 1 < 0) rotation = 360;
         rotation = rotation - 1;
     }
 
     public void RightMove()
     {
+        if (rotation + 1 > 360) rotation = 0;
         rotation = rotation + 1;
     }
 

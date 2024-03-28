@@ -15,6 +15,11 @@ public class SceneChanger : MonoBehaviour
 
     public VideoPlayer vp;
 
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
 
     /*  ============== TEMP ==============  */
     public VideoClip v1;
